@@ -3,7 +3,7 @@
   <packageId>Peko.AutoDropShieldBelts</packageId>
   <name>Auto Drop Shield Belts</name>
   <author>Peko</author>
-  <description>This mod automatically drops shield belts, whenever a pawn picks up a ranged weapon.</description>
+  <description>This mod adds a simple automatic micro-management that allows pawns to automatically drop their shield belts when picking up Ranged Weapons.</description>
   <supportedVersions>
     <li>1.5</li>
   </supportedVersions>
