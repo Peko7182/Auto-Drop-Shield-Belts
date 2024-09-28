@@ -1,7 +1,6 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
-using Verse.AI;
 using System.Reflection;
 
 // Created with RW Mod Structure Builder
@@ -20,6 +19,29 @@ namespace AutoDropShieldBelts
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
+    
+    // Harmony patch class
+    [HarmonyPatch(typeof(Pawn_ApparelTracker))]
+    [HarmonyPatch("Wear")]
+    public static class Patch_Pawn_ApparelTracker_Wear
+    {
+        // Postfix to run code after the apparel is equipped
+        [HarmonyPostfix]
+        static void Postfix(Pawn_ApparelTracker __instance, Apparel newApparel)
+        {
+            // If the mod is disabled, do nothing
+            if (!AutoDropShieldBeltMod.Settings.EnableMod) return;
+            
+            Pawn pawn = __instance.pawn;
+            
+            // If inventory is enabled and the apparel is a shield belt
+            if (AutoDropShieldBeltMod.Settings.EnableInventory && newApparel.def == ThingDefOf.Apparel_ShieldBelt)
+                // Check if the pawn has any ranged weapons equipped
+                if (pawn.equipment.AllEquipmentListForReading.Any(thing => thing.def.IsRangedWeapon))
+                    // If a ranged weapon is equipped, un-equip the shield belt
+                    pawn.UnEquipApparel(ThingDefOf.Apparel_ShieldBelt);
+        }
+    }
 
     // Harmony patch class
     [HarmonyPatch(typeof(Pawn_EquipmentTracker))]
@@ -30,32 +52,25 @@ namespace AutoDropShieldBelts
         [HarmonyPostfix]
         static void Postfix(Pawn_EquipmentTracker __instance, ThingWithComps newEq)
         {
-            // Check if the thing equipped is a ranged weapon
-            if (newEq.def.IsRangedWeapon)
-            {
-                Pawn pawn = __instance.pawn; // Get the pawn who equipped the weapon
+            // If the mod is disabled, do nothing
+            if (!AutoDropShieldBeltMod.Settings.EnableMod) return;
+            
+            Pawn pawn = __instance.pawn;
 
-                QueueShieldBeltRemovalJob(pawn);
+            if (AutoDropShieldBeltMod.Settings.EnableInventory)
+            {
+                if (newEq.def.IsRangedWeapon)
+                    // If inventory is enabled, unequip the shield belt if a ranged weapon is equipped
+                    pawn.UnEquipApparel(ThingDefOf.Apparel_ShieldBelt);
+                else
+                    // If inventory is enabled, equip the shield belt if a non-ranged weapon is equipped
+                    pawn.EquipApparel(ThingDefOf.Apparel_ShieldBelt);
             }
-        }
-
-        // Queue a job to remove the shield belt slowly
-        private static void QueueShieldBeltRemovalJob(Pawn pawn)
-        {
-            // Find the shield belt the pawn is wearing
-            var shieldBelt = pawn.apparel?.WornApparel.FirstOrDefault(a => a.def == ThingDefOf.Apparel_ShieldBelt);
-            if (shieldBelt != null)
+            else
             {
-                // Log the removal of the shield belt
-                pawn.ThrowText("Removing shield belt...");
-
-                // Create a job to remove the shield belt
-                Job removeJob = JobMaker.MakeJob(JobDefOf.RemoveApparel, shieldBelt);
-                removeJob.count = 1;  // Make sure it only removes one shield belt at a time
-                removeJob.haulDroppedApparel = true;
-
-                // Assign the job to the pawn
-                pawn.jobs.StartJob(removeJob, JobCondition.InterruptForced);
+                if (newEq.def.IsRangedWeapon)
+                    // If inventory is disabled, drop the shield belt if a ranged weapon is equipped
+                    pawn.DropApparel(ThingDefOf.Apparel_ShieldBelt);
             }
         }
     }

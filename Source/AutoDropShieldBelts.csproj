@@ -58,8 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoDropShieldBelts.cs" />
+    <Compile Include="Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Utils\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
