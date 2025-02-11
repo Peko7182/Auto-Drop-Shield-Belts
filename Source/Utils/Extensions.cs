@@ -32,7 +32,7 @@ namespace AutoDropShieldBelts
             // Check if the apparel exists
             if (apparel == null)
             {
-                Log.Warning("Apparel not found in pawn's inventory.");
+                // Log.Warning("Apparel not found in pawn's inventory.");
                 return; // If apparel not found, do nothing
             }
 

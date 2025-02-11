@@ -74,4 +74,27 @@ namespace AutoDropShieldBelts
             }
         }
     }
+    
+    // Harmony patch class
+    [HarmonyPatch(typeof(Pawn_EquipmentTracker))]
+    [HarmonyPatch("TryDropEquipment")]
+    public static class Patch_Pawn_EquipmentTracker_TryDropEquipment
+    {
+        // Postfix to run code after the weapon is dropped
+        [HarmonyPostfix]
+        static void Postfix(Pawn_EquipmentTracker __instance, ThingWithComps eq, ThingWithComps resultingEq, IntVec3 pos, bool forbid, ref bool __result)
+        {
+            // If the mod is disabled, do nothing
+            if (!AutoDropShieldBeltMod.Settings.EnableMod) return;
+
+            Pawn pawn = __instance.pawn;
+
+            // If inventory is enabled and the drop IS VALID
+            if (AutoDropShieldBeltMod.Settings.EnableInventory && __result)
+            {
+                // If inventory is enabled, equip the shield belt if a weapon is dropped
+                pawn.EquipApparel(ThingDefOf.Apparel_ShieldBelt);
+            }
+        }
+    }
 }
