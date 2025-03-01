@@ -9,10 +9,14 @@
   </supportedVersions>
   <modVersion>0.0.0.2</modVersion>
   <modDependencies>
-  <li>
-    <packageId>brrainz.harmony</packageId>
-    <displayName>Harmony</displayName>
-    <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
-  </li>
-</modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+		<li>brrainz.harmony</li>
+		<li>PeteTimesSix.SimpleSidearms</li>
+	</loadAfter>
 </ModMetaData>

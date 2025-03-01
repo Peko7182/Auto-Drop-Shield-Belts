@@ -76,6 +76,31 @@ namespace AutoDropShieldBelts
     }
     
     // Harmony patch class
+    [HarmonyPatch(typeof(ThingOwner))]
+    [HarmonyPatch("TryAddOrTransfer", new[] { typeof(Thing), typeof(bool) })]
+    public static class Patch_ThingOwner_TryAddOrTransfer
+    {
+        // Postfix to run code after the equipment is added or transferred
+        [HarmonyPostfix]
+        static void Postfix(ThingOwner __instance, Thing item, bool canMergeWithExistingStacks, ref bool __result)
+        {
+            // If the mod is disabled, do nothing
+            if (!AutoDropShieldBeltMod.Settings.EnableMod) return;
+            
+            Pawn pawn = (__instance.Owner as Pawn) ?? ((__instance.Owner as Pawn_InventoryTracker)?.pawn);
+
+            if (AutoDropShieldBeltMod.Settings.EnableInventory)
+            {
+                // If inventory is enabled, equip the shield belt if a ranged weapon is added
+                if (item.def.IsRangedWeapon)
+                {
+                    pawn.EquipApparel(ThingDefOf.Apparel_ShieldBelt);
+                }
+            }
+        }
+    }
+    
+    // Harmony patch class
     [HarmonyPatch(typeof(Pawn_EquipmentTracker))]
     [HarmonyPatch("TryDropEquipment")]
     public static class Patch_Pawn_EquipmentTracker_TryDropEquipment
