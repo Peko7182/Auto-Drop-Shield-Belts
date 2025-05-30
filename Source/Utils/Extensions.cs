@@ -3,7 +3,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace AutoDropShieldBelts
+namespace AutoDropShieldBelts.Utils
 {
     public static class Extensions
     {
@@ -14,6 +14,9 @@ namespace AutoDropShieldBelts
         /// <param name="text">The text to throw.</param>
         public static void ThrowText(this Pawn pawn, string text)
         {
+            // NULL Checking
+            if (pawn == null || text == null) return;
+            
             if (!AutoDropShieldBeltMod.Settings.ThrowTextMessages) return;
             MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, text);
         }
@@ -26,8 +29,11 @@ namespace AutoDropShieldBelts
         /// <param name="thingDef">The def of the apparel to equip.</param>
         public static void EquipApparel(this Pawn pawn, ThingDef thingDef)
         {
+            // NULL Checking
+            if (pawn == null || thingDef == null) return;
+            
             // Get the apparel
-            var apparel = pawn.inventory?.innerContainer.FirstOrDefault(a => a.def == thingDef);
+            var apparel = pawn.inventory?.innerContainer?.FirstOrDefault(a => a.def == thingDef);
 
             // Check if the apparel exists
             if (apparel == null)
@@ -37,7 +43,7 @@ namespace AutoDropShieldBelts
             }
 
             // Remove the apparel from the inventory
-            pawn.inventory?.innerContainer.Remove(apparel);
+            pawn.inventory?.innerContainer?.Remove(apparel);
 
             // Add the apparel to the apparel tracker
             pawn.apparel?.Wear((Apparel)apparel);
@@ -53,8 +59,11 @@ namespace AutoDropShieldBelts
         /// <param name="thingDef">The def of the apparel to un-equip.</param>
         public static void UnEquipApparel(this Pawn pawn, ThingDef thingDef)
         {
+            // NULL Checking
+            if (pawn == null || thingDef == null) return;
+            
             // Get the apparel
-            var apparel = pawn.apparel?.WornApparel.FirstOrDefault(a => a.def == thingDef);
+            var apparel = pawn.apparel?.WornApparel?.FirstOrDefault(a => a.def == thingDef);
 
             // Check if the apparel exists
             if (apparel == null)
@@ -66,7 +75,7 @@ namespace AutoDropShieldBelts
             pawn.apparel?.Remove(apparel);
 
             // Add the apparel to the pawn's inventory
-            pawn.inventory?.innerContainer.TryAdd(apparel, canMergeWithExistingStacks: false);
+            pawn.inventory?.innerContainer?.TryAdd(apparel, canMergeWithExistingStacks: false);
 
             // Throw a text message to the player
             pawn.ThrowText($"UnEquipping {thingDef.label}...");
@@ -80,8 +89,11 @@ namespace AutoDropShieldBelts
         /// <param name="thingDef">The def of the apparel to remove.</param>
         public static void DropApparel(this Pawn pawn, ThingDef thingDef)
         {
+            // NULL Checking
+            if (pawn == null || thingDef == null) return;
+            
             // Find the apparel the pawn is wearing
-            var apparel = pawn.apparel?.WornApparel.FirstOrDefault(a => a.def == thingDef);
+            var apparel = pawn.apparel?.WornApparel?.FirstOrDefault(a => a.def == thingDef);
 
             // Check if the apparel exists
             if (apparel == null)

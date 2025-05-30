@@ -2,6 +2,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 using System.Reflection;
+using AutoDropShieldBelts.Utils;
 
 // Created with RW Mod Structure Builder
 namespace AutoDropShieldBelts
