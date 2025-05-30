@@ -12,8 +12,11 @@ namespace AutoDropShieldBelts
     {
         static AutoDropShieldBelts()
         {
+            // Assembly version
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            
             // Log initialization
-            Log.Message("[Auto Drop Shield Belts v0.0.0.1] Initialized");
+            Log.Message($"[Auto Drop Shield Belts v{version}] Initialized");
 
             // Harmony instance to patch methods
             var harmony = new Harmony("com.peko.rimworld.mod.AutoDropShieldBelts");
