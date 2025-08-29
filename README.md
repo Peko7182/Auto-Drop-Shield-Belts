@@ -4,7 +4,7 @@
 This mod adds simple automatic micro-management that allows pawns to **automatically drop their shield belts when picking up ranged weapons**.
 
 ## Compatibility
-- Compatible with **RimWorld 1.5** (If RimWorld updates, feel free to fork).
+- Compatible with **RimWorld 1.5/1.6** (If RimWorld updates, feel free to fork).
 
 ## Installation
 ### 1. Steam Workshop
